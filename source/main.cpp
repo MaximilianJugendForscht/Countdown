@@ -25,53 +25,68 @@
 #include <thread>
 #include <future>
 
-template <typename IterLhs, typename IterRhs>
-auto findUnionOf(IterLhs lhsIter, const IterLhs& lhsEnd,
-                 const IterRhs rhsBegin, const IterRhs& rhsEnd) {
+template <class IterLhs, class IterRhs>
+auto findUnionOf(IterLhs lhsIter, const IterLhs& lhsEnd, const IterRhs rhsBegin, const IterRhs& rhsEnd) {
     std::vector<std::string> result;
 
-    for(; lhsIter != lhsEnd; ++lhsIter) {
-        if(std::find(rhsBegin, rhsEnd, *lhsIter) != rhsEnd) {
+    for(; lhsIter != lhsEnd; ++lhsIter)
+        if(std::find(rhsBegin, rhsEnd, *lhsIter) != rhsEnd)
             result.push_back(*lhsIter);
-        }
-    }
-
     return result;
 }
 
-int main(int argc, char* argv[]) {
-    // program name and word list
+
+std::ifstream wordlistFile;
+std::vector<std::string> words;
+std::string anagram; 
+
+void checkAmountOfArguments (int argc) {
     if(argc < 3) {
         std::cout << "Please supply a word to check anagrams of and a newline delimited list of words as a file" << std::endl;
         std::exit(EXIT_FAILURE);
     }
+}
 
-    const char* const wordlistPath = argv[2];
-
-    std::ifstream wordlistFile(wordlistPath, std::ios_base::in);
-
+void checkFileCanOpen (const char* filename) {
     if(! wordlistFile.is_open()) {
-        std::cout << "Could not open file " << wordlistPath << std::endl;
+        std::cout << "Could not open file " << filename << std::endl;
         std::exit(EXIT_FAILURE);
     }
+}
 
-    std::string currentWord;
-    std::vector<std::string> words;
-
+void fillWordBuffer () {
     std::cout << "Loading words..." << std::endl;
 
+    std::string currentWord;
     while(wordlistFile >> currentWord) {
         words.emplace_back(std::move(currentWord));
     }
 
     std::cout << words.size() << " words loaded!" << std::endl;
+}
 
-    std::string anagram = argv[1];
+void setupAnagram (char* argv []) {
+    anagram = argv[1];
     std::transform(anagram.begin(), anagram.end(), anagram.begin(), tolower);
+    std::sort(anagram.begin(), anagram.end());
+}
+
+void setupWordlist (char* argv[]) {
+    wordlistFile.open(std::string (argv[2]), std::ios_base::in);
+    checkFileCanOpen(argv[2]);
+    fillWordBuffer();
+}
+
+void setup (int argc, char* argv []) {
+    checkAmountOfArguments (argc);
+    setupAnagram(argv);
+    setupWordlist(argv);
+}
+
+int main(int argc, char* argv[]) {
+    setup (argc, argv);
 
     std::cout << "Searching for anagrams of " << anagram << std::endl;
-
-    std::sort(anagram.begin(), anagram.end());
 
     std::vector<std::string> anagramPermutations;
 
