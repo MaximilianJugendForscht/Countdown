@@ -67,6 +67,7 @@ int main(int argc, char* argv[]) {
     std::cout << words.size() << " words loaded!" << std::endl;
 
     std::string anagram = argv[1];
+    std::transform(anagram.begin(), anagram.end(), anagram.begin(), tolower);
 
     std::cout << "Searching for anagrams of " << anagram << std::endl;
 
@@ -82,7 +83,7 @@ int main(int argc, char* argv[]) {
 
     std::vector<std::future<std::vector<std::string>>> futures;
 
-    const size_t jump = 20000;
+    const int jump = 20000;
     auto wordIter = words.cbegin();
 
     for(;;) {
