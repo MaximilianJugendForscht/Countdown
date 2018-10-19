@@ -39,7 +39,7 @@ inline std::vector<std::string> findUnionOf(IterLhs lhsIter, const IterLhs &lhsE
     return result;
 }
 
-void checkAmountOfArguments(int argc)
+void checkAmountOfArguments(const int argc)
 {
     if (argc < 3)
     {
@@ -48,7 +48,7 @@ void checkAmountOfArguments(int argc)
     }
 }
 
-void checkFileIsOpen(std::ifstream &wordlistFile)
+void checkFileIsOpen(const std::ifstream &wordlistFile)
 {
     if (!wordlistFile.is_open())
     {
