@@ -30,7 +30,7 @@ TARGET_COMPILE_FEATURES(
 SET_PROPERTY(
     TARGET Countdown 
     APPEND_STRING PROPERTY COMPILE_FLAGS
-    "-Wall -Werror"
+    "-Wall -Werror -g"
 )
 
 IF(NOT WIN32)
@@ -38,7 +38,7 @@ IF(NOT WIN32)
         SET_PROPERTY(
             TARGET Countdown 
             APPEND_STRING PROPERTY COMPILE_FLAGS
-            " -fsanitize=address --coverage"
+            " -fsanitize=address --coverage -g"
         )
     ENDIF(CMAKE_BUILD_TYPE MATCHES DEBUG)
 ENDIF()
